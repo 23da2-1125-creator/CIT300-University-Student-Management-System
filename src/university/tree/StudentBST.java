@@ -1,180 +1,243 @@
-	package university.tree;
+package university.tree;
 
-	import university.model.Student;
+import university.model.Student;
 
-	public class StudentBST {
+public class StudentBST {
 
-	    private class Node {
-	        Student student;
-	        Node left;
-	        Node right;
+    private class Node {
 
-	        Node(Student student) {
-	            this.student = student;
-	        }
-	    }
+        Student student;
+        Node left;
+        Node right;
 
-	    private Node root;
+        Node(Student student) {
+            this.student = student;
+        }
+    }
 
-	    public StudentBST() {
-	        root = null;
-	    }
+    private Node root;
 
-	    public boolean isEmpty() {
-	        return root == null;
-	    }
+    public StudentBST() {
+        root = null;
+    }
 
-	    // Insert a student using Student ID
-	    public void insert(Student student) {
-	        root = insertRecursive(root, student);
-	    }
+    public boolean isEmpty() {
+        return root == null;
+    }
 
-	    private Node insertRecursive(Node current, Student student) {
-	        if (current == null) {
-	            System.out.println(
-	                "Student inserted: " + student.getStudentId()
-	            );
-	            return new Node(student);
-	        }
+    // Insert a student using Student ID
+    public void insert(Student student) {
+        root = insertRecursive(root, student);
+    }
 
-	        if (student.getStudentId()
-	                < current.student.getStudentId()) {
-	            current.left =
-	                insertRecursive(current.left, student);
+    private Node insertRecursive(
+            Node current,
+            Student student) {
 
-	        } else if (student.getStudentId()
-	                > current.student.getStudentId()) {
-	            current.right =
-	                insertRecursive(current.right, student);
+        if (current == null) {
+            System.out.println(
+                    "Student inserted: "
+                    + student.getStudentId());
 
-	        } else {
-	            System.out.println(
-	                "Student ID already exists: "
-	                + student.getStudentId()
-	            );
-	        }
+            return new Node(student);
+        }
 
-	        return current;
-	    }
+        if (student.getStudentId()
+                < current.student.getStudentId()) {
 
-	    // Search for a student using Student ID
-	    public Student search(int studentId) {
-	        Node result = searchRecursive(root, studentId);
+            current.left = insertRecursive(
+                    current.left,
+                    student);
 
-	        if (result == null) {
-	            System.out.println(
-	                "Student not found: " + studentId
-	            );
-	            return null;
-	        }
+        } else if (student.getStudentId()
+                > current.student.getStudentId()) {
 
-	        System.out.println("Student found:");
-	        result.student.displayStudent();
-	        return result.student;
-	    }
+            current.right = insertRecursive(
+                    current.right,
+                    student);
 
-	    private Node searchRecursive(Node current, int studentId) {
-	        if (current == null
-	                || current.student.getStudentId() == studentId) {
-	            return current;
-	        }
+        } else {
+            System.out.println(
+                    "Student ID already exists: "
+                    + student.getStudentId());
+        }
 
-	        if (studentId < current.student.getStudentId()) {
-	            return searchRecursive(current.left, studentId);
-	        }
+        return current;
+    }
 
-	        return searchRecursive(current.right, studentId);
-	    }
+    // Search and display a student
+    public Student search(int studentId) {
 
-	    // Delete a student using Student ID
-	    public void delete(int studentId) {
-	        if (searchNode(root, studentId) == null) {
-	            System.out.println(
-	                "Cannot delete. Student not found: " + studentId
-	            );
-	            return;
-	        }
+        Node result =
+                searchRecursive(root, studentId);
 
-	        root = deleteRecursive(root, studentId);
+        if (result == null) {
+            System.out.println(
+                    "Student not found: " + studentId);
 
-	        System.out.println(
-	            "Student deleted: " + studentId
-	        );
-	    }
+            return null;
+        }
 
-	    private Node searchNode(Node current, int studentId) {
-	        if (current == null
-	                || current.student.getStudentId() == studentId) {
-	            return current;
-	        }
+        System.out.println("Student found:");
+        result.student.displayStudent();
 
-	        if (studentId < current.student.getStudentId()) {
-	            return searchNode(current.left, studentId);
-	        }
+        return result.student;
+    }
 
-	        return searchNode(current.right, studentId);
-	    }
+    // Search without automatically displaying messages
+    public Student findStudent(int studentId) {
 
-	    private Node deleteRecursive(Node current, int studentId) {
-	        if (current == null) {
-	            return null;
-	        }
+        Node result =
+                searchRecursive(root, studentId);
 
-	        if (studentId < current.student.getStudentId()) {
-	            current.left =
-	                deleteRecursive(current.left, studentId);
+        if (result == null) {
+            return null;
+        }
 
-	        } else if (studentId
-	                > current.student.getStudentId()) {
-	            current.right =
-	                deleteRecursive(current.right, studentId);
+        return result.student;
+    }
 
-	        } else {
-	            if (current.left == null) {
-	                return current.right;
-	            }
+    private Node searchRecursive(
+            Node current,
+            int studentId) {
 
-	            if (current.right == null) {
-	                return current.left;
-	            }
+        if (current == null
+                || current.student.getStudentId()
+                == studentId) {
 
-	            Node successor = findMinimum(current.right);
-	            current.student = successor.student;
+            return current;
+        }
 
-	            current.right = deleteRecursive(
-	                current.right,
-	                successor.student.getStudentId()
-	            );
-	        }
+        if (studentId
+                < current.student.getStudentId()) {
 
-	        return current;
-	    }
+            return searchRecursive(
+                    current.left,
+                    studentId);
+        }
 
-	    private Node findMinimum(Node current) {
-	        while (current.left != null) {
-	            current = current.left;
-	        }
+        return searchRecursive(
+                current.right,
+                studentId);
+    }
 
-	        return current;
-	    }
+    // Delete a student using Student ID
+    public void delete(int studentId) {
 
-	    // Display students in ascending Student ID order
-	    public void displayInOrder() {
-	        if (isEmpty()) {
-	            System.out.println("Student BST is empty.");
-	            return;
-	        }
+        if (searchNode(root, studentId) == null) {
+            System.out.println(
+                    "Cannot delete. Student not found: "
+                    + studentId);
 
-	        System.out.println("===== STUDENTS IN ASCENDING ORDER =====");
-	        inOrderRecursive(root);
-	    }
+            return;
+        }
 
-	    private void inOrderRecursive(Node current) {
-	        if (current != null) {
-	            inOrderRecursive(current.left);
-	            current.student.displayStudent();
-	            inOrderRecursive(current.right);
-	        }
-	    }
-	}
+        root = deleteRecursive(root, studentId);
 
+        System.out.println(
+                "Student deleted: " + studentId);
+    }
+
+    private Node searchNode(
+            Node current,
+            int studentId) {
+
+        if (current == null
+                || current.student.getStudentId()
+                == studentId) {
+
+            return current;
+        }
+
+        if (studentId
+                < current.student.getStudentId()) {
+
+            return searchNode(
+                    current.left,
+                    studentId);
+        }
+
+        return searchNode(
+                current.right,
+                studentId);
+    }
+
+    private Node deleteRecursive(
+            Node current,
+            int studentId) {
+
+        if (current == null) {
+            return null;
+        }
+
+        if (studentId
+                < current.student.getStudentId()) {
+
+            current.left = deleteRecursive(
+                    current.left,
+                    studentId);
+
+        } else if (studentId
+                > current.student.getStudentId()) {
+
+            current.right = deleteRecursive(
+                    current.right,
+                    studentId);
+
+        } else {
+
+            if (current.left == null) {
+                return current.right;
+            }
+
+            if (current.right == null) {
+                return current.left;
+            }
+
+            Node successor =
+                    findMinimum(current.right);
+
+            current.student = successor.student;
+
+            current.right = deleteRecursive(
+                    current.right,
+                    successor.student.getStudentId());
+        }
+
+        return current;
+    }
+
+    private Node findMinimum(Node current) {
+
+        while (current.left != null) {
+            current = current.left;
+        }
+
+        return current;
+    }
+
+    // Display students in ascending Student ID order
+    public void displayInOrder() {
+
+        if (isEmpty()) {
+            System.out.println(
+                    "Student BST is empty.");
+
+            return;
+        }
+
+        System.out.println(
+                "===== STUDENTS IN ASCENDING ORDER =====");
+
+        inOrderRecursive(root);
+    }
+
+    private void inOrderRecursive(Node current) {
+
+        if (current != null) {
+            inOrderRecursive(current.left);
+            current.student.displayStudent();
+            inOrderRecursive(current.right);
+        }
+    }
+}
