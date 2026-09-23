@@ -88,9 +88,19 @@ public class Main {
                     addStudentRequest(requestQueue);
                     break;
 
-                case 9:
-                    requestQueue.processRequest();
+                case 9: {
+
+                    String processedRequest =
+                            requestQueue.processRequest();
+
+                    if (processedRequest != null) {
+                        System.out.println(
+                                "Processed request: " + processedRequest
+                        );
+                    }
+
                     break;
+                }
 
                 case 10:
                     String nextRequest =
